@@ -1,0 +1,4 @@
+*.beam
+_rel
+deps
+.erlang.mk
