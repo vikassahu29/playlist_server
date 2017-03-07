@@ -8,5 +8,19 @@ start_link() ->
 	supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 init([]) ->
-	Procs = [],
-	{ok, {{one_for_one, 1, 5}, Procs}}.
+  RestartStrategy = one_for_all,
+  MaxRestarts = 1000,
+  MaxSecondsBetweenRestarts = 3600,
+
+  SupFlags = {RestartStrategy, MaxRestarts, MaxSecondsBetweenRestarts},
+
+  Children = [playlist_worker_supervisor()],
+	{ok, {SupFlags, Children}}.
+
+playlist_worker_supervisor() ->
+    Restart = permanent,
+    Shutdown = 2000,
+    Type = supervisor,
+
+    {playlist_worker_sup, {playlist_worker_sup, start_link, []},
+        Restart, Shutdown, Type, [playlist_worker_sup]}.
