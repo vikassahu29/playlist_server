@@ -57,8 +57,8 @@ handle_call({remove_song, Link}, _From, State) ->
 handle_call({change_song, Link}, _From, State) ->
 	{reply, song_changed, play_song_helper(State, Link)};
 
-handle_call(get_songs, _From, State=#state{songs=Songs}) ->
-	{reply, Songs, State}.
+handle_call(get_songs, _From, State=#state{songs=Songs, current_song=Cs}) ->
+	{reply, {[{songs, Songs}, {current_song, list_to_binary(Cs)}]}, State}.
 
 handle_cast(_Msg, State) ->
 	{noreply, State}.

@@ -6,7 +6,7 @@
 
 start(_Type, _Args) ->
   Dispatch = cowboy_router:compile([
-      {'_', [{"/", hello_handler, []}, {"/playlist", playlist_handler, []}]}
+      {'_', [{"/", hello_handler, []}, {"/playlist/:name", [{name, nonempty}], playlist_handler, []}]}
     ]),
   {ok, _} = cowboy:start_clear(my_http_listener, 100,
       [{port, 8080}], #{env => #{dispatch => Dispatch}}
